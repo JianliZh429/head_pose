@@ -24,7 +24,6 @@ def get_nose_eye_chin_mouth_6():
     :return: nose, chin, right eye corner, left eye corner, right mouth corner, left mouth corner
     """
     model_points = get_full_model_points()
-    print(model_points)
     return np.array([model_points[30], model_points[8], model_points[36],
                      model_points[45], model_points[48], model_points[54]])
 
