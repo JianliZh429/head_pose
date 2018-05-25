@@ -1,12 +1,12 @@
 import cv2
 import numpy as np
 
-from head_pose.model_loader import get_nose_eye_chin_mouth_6
+from head_pose.model_loader import get_model_3d_points
 
 
 class HeadPoseEstimator:
-    def __init__(self, image_size=(480, 640)):
-        self.model_points_3d = get_nose_eye_chin_mouth_6()
+    def __init__(self, image_size=(480, 640), mode='nose_chin_eyes_mouth'):
+        self.model_points_3d = get_model_3d_points(mode=mode)
         print('-----: {}'.format(self.model_points_3d))
         focal_length = image_size[1]
         camera_center = (image_size[1] / 2, image_size[0] / 2)
