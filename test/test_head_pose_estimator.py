@@ -1,36 +1,64 @@
+import os
+
 import cv2
 import numpy as np
 
 from head_pose import face_68_landmarks, get_points_from_landmarks, HeadPoseEstimator
-from sample_images import sample_image
+from sample_images import sample_images
+
+BASE_DIR = os.path.dirname(__file__)
 
 
-def test():
-    image_file = sample_image('danielle-bregoli.jpg')
+def estimate(image_file, mode='nose_2eyes'):
+    # image_file = sample_image('sample_09.jpg')
     im = cv2.imread(image_file)
     landmarks = face_68_landmarks(im)
     height, width = im.shape[:2]
     print(height, width)
 
-    pose_estimator = HeadPoseEstimator(image_size=(height, width), mode='nose_eyes_ears')
+    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+
+    pose_estimator = HeadPoseEstimator(image_size=(height, width), mode=mode)
     for marks in landmarks:
-        image_points = get_points_from_landmarks(marks, 'nose_eyes_ears')
+        # for pnt in marks:
+        #     cv2.circle(im, (int(pnt[0]), int(pnt[1])), 1, (0, 255, 0), 2, cv2.LINE_AA)
+        image_points = get_points_from_landmarks(marks, mode)
         print('========len======== : ', len(image_points))
-        print('========   ========: ', image_points)
+        print('========   ======== : ', image_points)
         rotation_vector, translation_vector = pose_estimator.solve_pose(image_points)
-        print(rotation_vector, translation_vector)
+        print(rotation_vector, '||||', translation_vector)
         end_points_2d = pose_estimator.projection(rotation_vector, translation_vector)
 
-        for pnt in image_points.tolist():
-            cv2.circle(im, (int(pnt[0]), int(pnt[1])), 1, (0, 0, 255), 1, cv2.LINE_AA)
+        for i, pnt in enumerate(image_points.tolist()):
+            cv2.circle(im, (int(pnt[0]), int(pnt[1])), 1, colors[i % 3], 3, cv2.LINE_AA)
 
         end_points_2d = np.array(end_points_2d).astype(np.int).tolist()
         cv2.line(im, tuple(end_points_2d[5]), tuple(end_points_2d[6]), (0, 255, 0))
         cv2.line(im, tuple(end_points_2d[6]), tuple(end_points_2d[7]), (255, 0, 0))
         cv2.line(im, tuple(end_points_2d[2]), tuple(end_points_2d[6]), (0, 0, 255))
-    cv2.imshow('im', im)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    return im
+    # cv2.imshow('im', im)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
 
-test()
+OUTPUT = 'output_05'
+
+
+def test(mode='nose_2eyes'):
+    image_files = sample_images(os.path.join(BASE_DIR, '../sample_images'))
+    print(image_files)
+    output_dir = os.path.join(BASE_DIR, '../{}'.format(OUTPUT))
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+    for im_f in image_files:
+        im = estimate(im_f, mode)
+        f_name = im_f.split(os.sep)[-1]
+        print(f_name)
+        cv2.imwrite('{}/{}'.format(output_dir, f_name), im)
+
+
+# test('nose_2eyes')
+# test('nose_eyes_mouth')
+# test('nose_chin_eyes_mouth')
+test('nose_eyes_ears')

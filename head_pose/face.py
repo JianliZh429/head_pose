@@ -35,9 +35,8 @@ def compute_face_descriptor(im, face):
 
 def _raw_face_landmarks(face_image, cnn=True):
     face_locations = detect_faces(face_image, cnn=cnn)
-    pose_predictor = pose_predictor_68_point
 
-    return [pose_predictor(face_image, face_location) for face_location in face_locations]
+    return [pose_predictor_68_point(face_image, face_location) for face_location in face_locations]
 
 
 def face_68_landmarks(face_image, cnn=True):
@@ -51,3 +50,14 @@ def face_68_landmarks(face_image, cnn=True):
     landmarks_as_tuples = [[(p.x, p.y) for p in landmark.parts()] for landmark in landmarks]
 
     return landmarks_as_tuples
+
+
+def face_5_landmarks(face_image, cnn=True):
+    face_locations = detect_faces(face_image, cnn=cnn)
+
+    # faces = dlib.full_object_detections()
+    faces = []
+    for face in face_locations:
+        faces.append(face_shape_predictor(face_image, face))
+
+    return faces

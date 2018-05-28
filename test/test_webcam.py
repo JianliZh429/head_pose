@@ -9,11 +9,12 @@ def pose_estimate():
     height, width = frame.shape[:2]
     print(height, width)
 
-    pose_estimator = HeadPoseEstimator(image_size=(height, width))
+    pose_estimator = HeadPoseEstimator(image_size=(height, width), mode='nose_eyes_mouth')
     for marks in landmarks:
-        image_points = get_points_from_landmarks(marks)
+        image_points = get_points_from_landmarks(marks, mode='nose_eyes_mouth')
         rotation_vector, translation_vector = pose_estimator.solve_pose(image_points)
-        print(rotation_vector, translation_vector)
+        print('-----------------------------------')
+        print(rotation_vector, '===\n', translation_vector)
         nose_end_points_2d = pose_estimator.projection(rotation_vector, translation_vector)
 
         for pnt in image_points.tolist():

@@ -1,11 +1,15 @@
 import cv2
 import numpy as np
 
-from head_pose.model_loader import get_model_3d_points
+from .model_loader import get_model_3d_points
 
 
 class HeadPoseEstimator:
     def __init__(self, image_size=(480, 640), mode='nose_chin_eyes_mouth'):
+        """
+        :param image_size:
+        :param mode: must in ['nose_eyes_ears','nose_chin_eyes_mouth', 'nose_eyes_mouth','nose_2eyes']
+        """
         self.model_points_3d = get_model_3d_points(mode=mode)
         print('-----: {}'.format(self.model_points_3d))
         focal_length = image_size[1]
@@ -23,10 +27,22 @@ class HeadPoseEstimator:
         Solve pose from image points
         Return (rotation_vector, translation_vector) as pose.
         """
-        (_, rotation_vector, translation_vector) = cv2.solvePnP(self.model_points_3d, image_points,
-                                                                self.camera_matrix, self.dist_coeffs,
-                                                                flags=cv2.SOLVEPNP_ITERATIVE)
+        if len(image_points) == 3:
 
+            # r_vec = np.array([[0.31129965], [-0.61099538], [2.76988726]])
+            # t_vec = np.array([[22.16439846], [-13.85181104], [-303.74858751]])
+            # r_vec = np.array([[0.67449138], [-0.06618537], [-3.07730173]])
+            # t_vec = np.array([[-131.09678991], [-66.22593863], [-1075.76498503]])
+            r_vec = np.array([[0.01891013], [0.08560084], [-3.14392813]])
+            t_vec = np.array([[-14.97821226], [-10.62040383], [-2053.03596872]])
+            (_, rotation_vector, translation_vector) = cv2.solvePnP(self.model_points_3d, image_points,
+                                                                    self.camera_matrix, self.dist_coeffs,
+                                                                    rvec=r_vec, tvec=t_vec,
+                                                                    useExtrinsicGuess=True,
+                                                                    flags=cv2.SOLVEPNP_ITERATIVE)
+        else:
+            (_, rotation_vector, translation_vector) = cv2.solvePnP(self.model_points_3d, image_points,
+                                                                    self.camera_matrix, self.dist_coeffs)
         # (success, rotation_vector, translation_vector) = cv2.solvePnP(
         #     self.model_points,
         #     image_points,
