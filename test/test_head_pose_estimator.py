@@ -42,10 +42,10 @@ def estimate(image_file, mode='nose_2eyes'):
     # cv2.destroyAllWindows()
 
 
-OUTPUT = 'output_067'
+OUTPUT = 'output_nose_2eyes_02'
 
 
-def test(mode='nose_2eyes'):
+def test(mode='nose_eyes_mouth'):
     image_files = sample_images(os.path.join(BASE_DIR, '../sample_images'))
     print(image_files)
     output_dir = os.path.join(BASE_DIR, '../{}'.format(OUTPUT))
@@ -58,7 +58,7 @@ def test(mode='nose_2eyes'):
         cv2.imwrite('{}/{}'.format(output_dir, f_name), im)
 
 
-test('nose_2eyes')
-# test('nose_eyes_mouth')
-# test('nose_chin_eyes_mouth')
 # test('nose_eyes_ears')
+# test('nose_chin_eyes_mouth')
+# test('nose_eyes_mouth')
+test('nose_2eyes')

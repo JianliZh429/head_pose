@@ -32,15 +32,15 @@ class HeadPoseEstimator:
             left = image_points[2]
             dist1 = np.linalg.norm(nose - right)
             dist2 = np.linalg.norm(nose - left)
-            if dist1 < dist2:
+            if dist1 <= dist2:
                 r_vec = np.array([[0.34554543], [-0.72173726], [0.08495318]])
                 t_vec = np.array([[-12.14525577], [-48.03475936], [383.82047981]])
-            elif dist1 > dist2:
+            else:
                 r_vec = np.array([[0.75807009], [0.3207348], [-2.80691676]])
                 t_vec = np.array([[-24.07046963], [-1.68285571], [-199.17583135]])
-            else:
-                r_vec = np.array([[0.0], [-0.0], [0.0]])
-                t_vec = np.array([[[0.0], [0.0], [0.0]]])
+            # else:
+            #     r_vec = np.array([[0.0], [-0.0], [0.0]])
+            #     t_vec = np.array([[[0.0], [0.0], [0.0]]])
             (_, rotation_vector, translation_vector) = cv2.solvePnP(self.model_points_3d, image_points,
                                                                     self.camera_matrix, self.dist_coeffs,
                                                                     rvec=r_vec, tvec=t_vec,
