@@ -10,13 +10,12 @@ BASE_DIR = os.path.dirname(__file__)
 
 
 def estimate(image_file, mode='nose_2eyes'):
-    # image_file = sample_image('sample_09.jpg')
     im = cv2.imread(image_file)
     landmarks = face_68_landmarks(im)
     height, width = im.shape[:2]
     print(height, width)
 
-    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255), (255, 255, 0), (255, 125, 125)]
 
     pose_estimator = HeadPoseEstimator(image_size=(height, width), mode=mode)
     for marks in landmarks:
@@ -26,11 +25,12 @@ def estimate(image_file, mode='nose_2eyes'):
         print('========len======== : ', len(image_points))
         print('========   ======== : ', image_points)
         rotation_vector, translation_vector = pose_estimator.solve_pose(image_points)
-        print(rotation_vector, '||||', translation_vector)
+        print('-------------------------\n', rotation_vector, '||||\n', translation_vector,
+              '\n-------------------------\n')
         end_points_2d = pose_estimator.projection(rotation_vector, translation_vector)
 
         for i, pnt in enumerate(image_points.tolist()):
-            cv2.circle(im, (int(pnt[0]), int(pnt[1])), 1, colors[i % 3], 3, cv2.LINE_AA)
+            cv2.circle(im, (int(pnt[0]), int(pnt[1])), 1, colors[i % 6], 3, cv2.LINE_AA)
 
         end_points_2d = np.array(end_points_2d).astype(np.int).tolist()
         cv2.line(im, tuple(end_points_2d[5]), tuple(end_points_2d[6]), (0, 255, 0))
@@ -42,7 +42,7 @@ def estimate(image_file, mode='nose_2eyes'):
     # cv2.destroyAllWindows()
 
 
-OUTPUT = 'output_05'
+OUTPUT = 'output_067'
 
 
 def test(mode='nose_2eyes'):
@@ -52,13 +52,13 @@ def test(mode='nose_2eyes'):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     for im_f in image_files:
-        im = estimate(im_f, mode)
         f_name = im_f.split(os.sep)[-1]
-        print(f_name)
+        print('\n------------------------{}'.format(f_name))
+        im = estimate(im_f, mode)
         cv2.imwrite('{}/{}'.format(output_dir, f_name), im)
 
 
-# test('nose_2eyes')
+test('nose_2eyes')
 # test('nose_eyes_mouth')
 # test('nose_chin_eyes_mouth')
-test('nose_eyes_ears')
+# test('nose_eyes_ears')
