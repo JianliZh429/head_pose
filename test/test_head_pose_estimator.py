@@ -3,7 +3,8 @@ import os
 import cv2
 import numpy as np
 
-from head_pose import face_68_landmarks, get_points_from_landmarks, HeadPoseEstimator
+from head_pose import get_points_from_landmarks, HeadPoseEstimator
+from head_pose.face import face_68_landmarks
 from sample_images import sample_images
 
 BASE_DIR = os.path.dirname(__file__)

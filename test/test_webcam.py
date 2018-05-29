@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 
-from head_pose import face_68_landmarks, HeadPoseEstimator, get_points_from_landmarks
+from head_pose import HeadPoseEstimator, get_points_from_landmarks
+from head_pose.face import face_68_landmarks
 
 
 def pose_estimate():

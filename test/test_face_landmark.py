@@ -1,6 +1,6 @@
 import cv2
 
-from head_pose import face_68_landmarks, face_5_landmarks
+from head_pose.face import face_68_landmarks, face_5_landmarks
 from sample_images import sample_image
 
 

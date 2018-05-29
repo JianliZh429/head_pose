@@ -1,11 +1,16 @@
 import os
 
 import numpy as np
+from pkg_resources import resource_filename
 
 BASE_DIR = os.path.dirname(__file__)
 
 
-def get_full_model_points(filename=os.path.join(BASE_DIR, '../models/model_3D_68.txt')):
+def get_68_3d_model():
+    return resource_filename(__name__, 'models/model_3D_68.txt')
+
+
+def get_full_model_points(filename=get_68_3d_model()):
     """Get all 68 3D model points from file"""
     raw_value = []
     with open(filename) as file:
@@ -13,7 +18,6 @@ def get_full_model_points(filename=os.path.join(BASE_DIR, '../models/model_3D_68
             raw_value.append(line)
     model_points = np.array(raw_value, dtype=np.float32)
     model_points = np.reshape(model_points, (3, -1)).T
-    # model_points *= 4
     model_points[:, -1] *= -1
 
     return model_points
