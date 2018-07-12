@@ -25,5 +25,5 @@ def to_pitch_yaw_roll(rotation_vector, translation_vector):
     
     pitch = math.degrees(math.asin(math.sin(pitch)))
     roll = math.degrees(math.asin(math.sin(roll)))
-    yaw = -math.degrees(math.asin(math.cos(yaw)))
+    yaw = -math.degrees(math.asin(math.sin(yaw)))
     return pitch, yaw, roll
