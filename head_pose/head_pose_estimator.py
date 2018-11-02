@@ -13,6 +13,7 @@ class HeadPoseEstimator:
         self.model_points_3d = get_model_3d_points(mode=mode)
         focal_length = image_size[1]
         camera_center = (image_size[1] / 2, image_size[0] / 2)
+
         self.camera_matrix = np.array([
             [focal_length, 0, camera_center[0]],
             [0, focal_length, camera_center[1]],
